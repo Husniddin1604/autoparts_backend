@@ -12,8 +12,8 @@ from starlette.exceptions import HTTPException as StarletteHTTPException
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Autoparts market",
-        docs_url="/api/v1/swagger/",
-        openapi_url="/api/v1/openapi.json",
+        docs_url="/api/swagger/",
+        openapi_url="/api/openapi.json",
         swagger_ui_parameters={"persistAuthorization": True},
         redoc_url=None,
         version="0.1.0",
