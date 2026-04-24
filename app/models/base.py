@@ -19,7 +19,7 @@ class Base(DeclarativeBase):
     updated_at: Mapped[datetime] = mapped_column(
         TIMESTAMP(timezone=True),
         server_default=text("now()"),
-        onupdate=text("now()"),
+        server_onupdate=text("now()"),
     )
     deleted_at: Mapped[datetime | None] = mapped_column(
         TIMESTAMP(timezone=True),

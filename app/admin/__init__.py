@@ -1,17 +1,27 @@
 from urllib.parse import urljoin
 
 from admin.auth import AdminAuth
-from admin.views.example import ExampleAdminView
+from admin.views import *
 from db.session import engine
-from fastapi import FastAPI, Request
+from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from models.example import Example
+from models.autoparts import (
+    Part, Brand, PartNumbers,
+    CrossReference, PartFitment
+)
+from models.cars import CarModel, CarModification, Manufacturer
+from models.categories import (
+    Attribute, Category, CategoryAttribute,
+    PartCategoryLinks
+)
+from models.users import User
+from models.products import Product, ProductAttributeValues, Stock
 from starlette_admin.contrib.sqla import Admin
 
 
 def setup_admin(app: FastAPI):
-    base_url = "/api/v1/dashboard/"
-    admin_base_url = "https://autoparts.uz/api/v1/dashboard"
+    base_url = "/api/dashboard/"
+    admin_base_url = "https://autoparts.uz/api/dashboard"
 
     # Create a custom admin class that forces HTTPS
     class HTTPSAdmin(Admin):
@@ -27,13 +37,37 @@ def setup_admin(app: FastAPI):
 
     admin = HTTPSAdmin(
         engine,
-        title="ServiceName Dashboard",
+        title="Autoparts Market Dashboard",
         auth_provider=AdminAuth(),
         base_url=base_url,
         statics_dir="statics/starlette_admin",
     )
 
-    admin.add_view(ExampleAdminView(Example))
+    # Add Autoparts views
+    admin.add_view(PartAdminView(Part))
+    admin.add_view(BrandAdminView(Brand))
+    admin.add_view(PartNumbersAdminView(PartNumbers))
+    admin.add_view(CrossReferenceAdminView(CrossReference))
+    admin.add_view(PartFitmentAdminView(PartFitment))
+
+    # Add Cars views
+    admin.add_view(CarModelAdminView(CarModel))
+    admin.add_view(CarModificationAdminView(CarModification))
+    admin.add_view(ManufacturerAdminView(Manufacturer))
+
+    # Add Categories views
+    admin.add_view(CategoryAdminView(Category))
+    admin.add_view(AttributeAdminView(Attribute))
+    admin.add_view(CategoryAttributeAdminView(CategoryAttribute))
+    admin.add_view(PartCategoryLinksAdminView(PartCategoryLinks))
+
+    # Add Products views
+    admin.add_view(ProductAdminView(Product))
+    admin.add_view(ProductAttributeValuesAdminView(ProductAttributeValues))
+    admin.add_view(StockAdminView(Stock))
+
+    # Add Users views
+    admin.add_view(UserAdminView(User))
 
     admin.mount_to(app)
 
@@ -55,7 +89,7 @@ def setup_admin(app: FastAPI):
             await super().__call__(scope, receive, send)
 
     app.mount(
-        "/api/v1/dashboard/statics",
+        "/api/dashboard/statics",
         HTTPSStaticFiles(directory="statics/starlette_admin"),
         name="admin-statics",
     )
