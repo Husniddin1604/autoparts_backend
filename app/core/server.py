@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import uvicorn
 from core.config import settings
 
@@ -21,10 +23,12 @@ def get_config():
             "forwarded_allow_ips": "*",
         }
     else:
+        reload_dir = Path(__file__).resolve().parent.parent
         return {
             "reload": True,
             "log_level": "debug",
             "forwarded_allow_ips": "*",
+            "reload_dirs": f"{reload_dir}"
         }
 
 def run():
