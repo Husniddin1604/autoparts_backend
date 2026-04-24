@@ -24,7 +24,7 @@ COPY ./requirements.txt /app/requirements.txt
 RUN pip install --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
-# Copy your application code
+# Copy application code
 COPY . /app
 
 # Copy entrypoint script and make it executable
@@ -33,7 +33,7 @@ RUN chmod +x /app/entrypoint.sh
 
 RUN python app/collect_static.py
 
-# create non-root user
+# Create non-root user
 RUN adduser --disabled-password --no-create-home appuser
 USER appuser
 
@@ -43,7 +43,7 @@ EXPOSE 9090
 HEALTHCHECK --interval=10s --timeout=10s --retries=3 \
     CMD curl -f http://localhost:9090/health || exit 1
 
-# Entrypoint and default command to run your app
+# Entrypoint and default command to run app
 ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["python", "app/main.py"]
 
