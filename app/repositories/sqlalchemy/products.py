@@ -9,6 +9,11 @@ from repositories.ports.products import (
 )
 
 
+def _filter_deleted(query, model):
+    """Helper to filter out soft-deleted records."""
+    return query.where(model.deleted_at.is_(None))
+
+
 class SqlAlchemyProductRepository(ProductRepository):
     """
     Product Repository Implementation
@@ -25,24 +30,24 @@ class SqlAlchemyProductRepository(ProductRepository):
 
     async def get_by_id(self, product_id: int) -> Product | None:
         result = await self.session.execute(
-            select(Product).where(Product.id == product_id)
+            _filter_deleted(select(Product).where(Product.id == product_id), Product)
         )
         return result.scalar_one_or_none()
 
     async def get_by_barcode(self, barcode: str) -> Product | None:
         result = await self.session.execute(
-            select(Product).where(Product.barcode == barcode)
+            _filter_deleted(select(Product).where(Product.barcode == barcode), Product)
         )
         return result.scalar_one_or_none()
 
     async def get_by_part_number_id(self, part_number_id: int) -> list[Product]:
         result = await self.session.execute(
-            select(Product).where(Product.part_number_id == part_number_id)
+            _filter_deleted(select(Product).where(Product.part_number_id == part_number_id), Product)
         )
         return list(result.scalars().all())
 
     async def get_all(self) -> list[Product]:
-        result = await self.session.execute(select(Product))
+        result = await self.session.execute(_filter_deleted(select(Product), Product))
         return list(result.scalars().all())
 
 
@@ -62,13 +67,13 @@ class SqlAlchemyStockRepository(StockRepository):
 
     async def get_by_id(self, stock_id: int) -> Stock | None:
         result = await self.session.execute(
-            select(Stock).where(Stock.id == stock_id)
+            _filter_deleted(select(Stock).where(Stock.id == stock_id), Stock)
         )
         return result.scalar_one_or_none()
 
     async def get_by_product_id(self, product_id: int) -> list[Stock]:
         result = await self.session.execute(
-            select(Stock).where(Stock.product_id == product_id)
+            _filter_deleted(select(Stock).where(Stock.product_id == product_id), Stock)
         )
         return list(result.scalars().all())
 
@@ -103,29 +108,32 @@ class SqlAlchemyProductAttributeValuesRepository(ProductAttributeValuesRepositor
 
     async def get_by_id(self, product_attribute_value_id: int) -> ProductAttributeValues | None:
         result = await self.session.execute(
-            select(ProductAttributeValues).where(ProductAttributeValues.id == product_attribute_value_id)
+            _filter_deleted(select(ProductAttributeValues).where(ProductAttributeValues.id == product_attribute_value_id), ProductAttributeValues)
         )
         return result.scalar_one_or_none()
 
     async def get_by_product_id(self, product_id: int) -> list[ProductAttributeValues]:
         result = await self.session.execute(
-            select(ProductAttributeValues).where(ProductAttributeValues.product_id == product_id)
+            _filter_deleted(select(ProductAttributeValues).where(ProductAttributeValues.product_id == product_id), ProductAttributeValues)
         )
         return list(result.scalars().all())
 
     async def get_by_attribute_id(self, attribute_id: int) -> list[ProductAttributeValues]:
         result = await self.session.execute(
-            select(ProductAttributeValues).where(ProductAttributeValues.attribute_id == attribute_id)
+            _filter_deleted(select(ProductAttributeValues).where(ProductAttributeValues.attribute_id == attribute_id), ProductAttributeValues)
         )
         return list(result.scalars().all())
 
     async def get_by_product_and_attribute(self, product_id: int, attribute_id: int) -> ProductAttributeValues | None:
         result = await self.session.execute(
-            select(ProductAttributeValues).where(
-                and_(
-                    ProductAttributeValues.product_id == product_id,
-                    ProductAttributeValues.attribute_id == attribute_id
-                )
+            _filter_deleted(
+                select(ProductAttributeValues).where(
+                    and_(
+                        ProductAttributeValues.product_id == product_id,
+                        ProductAttributeValues.attribute_id == attribute_id
+                    )
+                ),
+                ProductAttributeValues
             )
         )
         return result.scalar_one_or_none()

@@ -5,6 +5,11 @@ from models.users import User
 from repositories.ports.users import UserRepository
 
 
+def _filter_deleted(query, model):
+    """Helper to filter out soft-deleted records."""
+    return query.where(model.deleted_at.is_(None))
+
+
 class SqlAlchemyUserRepository(UserRepository):
     """
     User Repository Class
@@ -21,19 +26,19 @@ class SqlAlchemyUserRepository(UserRepository):
 
     async def get_by_uuid(self, user_uuid: str) -> User | None:
         result = await self.session.execute(
-            select(User).where(User.user_uuid == user_uuid)
+            _filter_deleted(select(User).where(User.user_uuid == user_uuid), User)
         )
         return result.scalar_one_or_none()
 
     async def get_by_email(self, email: str) -> User | None:
         result = await self.session.execute(
-            select(User).where(User.email == email)
+            _filter_deleted(select(User).where(User.email == email), User)
         )
         return result.scalar_one_or_none()
 
     async def get_by_username(self, username: str) -> User | None:
         result = await self.session.execute(
-            select(User).where(User.username == username)
+            _filter_deleted(select(User).where(User.username == username), User)
         )
         return result.scalar_one_or_none()
 

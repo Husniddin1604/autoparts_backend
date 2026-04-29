@@ -9,6 +9,11 @@ from repositories.ports.cars import (
 )
 
 
+def _filter_deleted(query, model):
+    """Helper to filter out soft-deleted records."""
+    return query.where(model.deleted_at.is_(None))
+
+
 class SqlAlchemyManufacturerRepository(ManufacturerRepository):
     """
     Manufacturer Repository Implementation
@@ -25,18 +30,18 @@ class SqlAlchemyManufacturerRepository(ManufacturerRepository):
 
     async def get_by_id(self, manufacturer_id: int) -> Manufacturer | None:
         result = await self.session.execute(
-            select(Manufacturer).where(Manufacturer.id == manufacturer_id)
+            _filter_deleted(select(Manufacturer).where(Manufacturer.id == manufacturer_id), Manufacturer)
         )
         return result.scalar_one_or_none()
 
     async def get_by_name(self, name: str) -> Manufacturer | None:
         result = await self.session.execute(
-            select(Manufacturer).where(Manufacturer.name == name)
+            _filter_deleted(select(Manufacturer).where(Manufacturer.name == name), Manufacturer)
         )
         return result.scalar_one_or_none()
 
     async def get_all(self) -> list[Manufacturer]:
-        result = await self.session.execute(select(Manufacturer))
+        result = await self.session.execute(_filter_deleted(select(Manufacturer), Manufacturer))
         return list(result.scalars().all())
 
 
@@ -56,18 +61,18 @@ class SqlAlchemyCarModelRepository(CarModelRepository):
 
     async def get_by_id(self, car_model_id: int) -> CarModel | None:
         result = await self.session.execute(
-            select(CarModel).where(CarModel.id == car_model_id)
+            _filter_deleted(select(CarModel).where(CarModel.id == car_model_id), CarModel)
         )
         return result.scalar_one_or_none()
 
     async def get_by_manufacturer_id(self, manufacturer_id: int) -> list[CarModel]:
         result = await self.session.execute(
-            select(CarModel).where(CarModel.manufacturer_id == manufacturer_id)
+            _filter_deleted(select(CarModel).where(CarModel.manufacturer_id == manufacturer_id), CarModel)
         )
         return list(result.scalars().all())
 
     async def get_all(self) -> list[CarModel]:
-        result = await self.session.execute(select(CarModel))
+        result = await self.session.execute(_filter_deleted(select(CarModel), CarModel))
         return list(result.scalars().all())
 
 
@@ -87,18 +92,18 @@ class SqlAlchemyCarModificationRepository(CarModificationRepository):
 
     async def get_by_id(self, car_modification_id: int) -> CarModification | None:
         result = await self.session.execute(
-            select(CarModification).where(CarModification.id == car_modification_id)
+            _filter_deleted(select(CarModification).where(CarModification.id == car_modification_id), CarModification)
         )
         return result.scalar_one_or_none()
 
     async def get_by_model_id(self, model_id: int) -> list[CarModification]:
         result = await self.session.execute(
-            select(CarModification).where(CarModification.model_id == model_id)
+            _filter_deleted(select(CarModification).where(CarModification.model_id == model_id), CarModification)
         )
         return list(result.scalars().all())
 
     async def get_by_engine_code(self, engine_code: str) -> list[CarModification]:
         result = await self.session.execute(
-            select(CarModification).where(CarModification.engine_code == engine_code)
+            _filter_deleted(select(CarModification).where(CarModification.engine_code == engine_code), CarModification)
         )
         return list(result.scalars().all())
