@@ -19,11 +19,11 @@ from schemas.products import (
 
 router = APIRouter(
     prefix="/products",
-    tags=["products"],
+    tags=["admin-products"],
 )
 
 
-# Product endpoints
+# Product endpoints (write operations)
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def create_product(
     product_info: ProductCreateRequest,
@@ -56,7 +56,7 @@ async def get_products_by_part_number_id(
     return await product_service.get_products_by_part_number_id(part_number_id)
 
 
-# Stock endpoints
+# Stock endpoints (write operations)
 @router.post("/stocks", status_code=status.HTTP_201_CREATED)
 async def create_stock(
     stock_info: StockCreateRequest,
@@ -99,7 +99,7 @@ async def update_stock_reserved_quantity(
     return await stock_service.update_stock_reserved_quantity(stock_id, reserved_quantity_update.reserved_quantity)
 
 
-# ProductAttributeValues endpoints
+# ProductAttributeValues endpoints (write operations)
 @router.post("/attribute-values", status_code=status.HTTP_201_CREATED)
 async def create_product_attribute_value(
     attribute_value_info: ProductAttributeValuesCreateRequest,

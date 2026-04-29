@@ -1,6 +1,4 @@
-from typing import Optional
-
-from dependencies.users import RequestUserDep, UserServiceDep
+from dependencies.users import RequestUserDep
 from dependencies.auth import AuthServiceDep
 from schemas.auth import LoginWithEmailRequest, LoginWithUsernameRequest
 from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
@@ -28,7 +26,7 @@ async def login_with_username(
 ) -> dict:
     return await auth_service.login_with_username(credentials.username, credentials.password)
 
-@router.get(
+@router.post(
     "/logout",
 )
 async def logout_route(
@@ -38,3 +36,12 @@ async def logout_route(
 ):
     token = credentials.credentials
     return await auth_service.logout(token)
+
+@router.post("/refresh-token")
+async def refresh_token_route(
+    current_user: RequestUserDep,
+    auth_service: AuthServiceDep,
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+):
+    token = credentials.credentials
+    return await auth_service.refresh_token(token)

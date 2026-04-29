@@ -106,6 +106,10 @@ class AuthServiceABC(ABC):
     async def login_with_username(self, phone: str, password: str) -> dict:
         raise NotImplementedError()
 
+    @abstractmethod
+    async def refresh_token(self, token: str) -> dict:
+        raise NotImplementedError()
+
 
 class BrandServiceABC(ABC):
     """

@@ -156,6 +156,19 @@ class AuthService(AuthServiceABC):
             "refresh_token": refresh_token
         }
 
+    async def refresh_token(self, token: str) -> dict:
+        refresh_token = await self.verify_refresh_token(token)
+        user_uuid = refresh_token.get("user_uuid")
+        user_email = refresh_token.get("user_email")
+
+        access_token = create_access_token(str(user_uuid), str(user_email))
+        refresh_token = create_refresh_token(str(user_uuid), str(user_email))
+
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token
+        }
+
 
     async def blacklist_jti(self, jti: str, exp: int) -> None:
         now_ts = int(datetime.now(timezone.utc).timestamp())

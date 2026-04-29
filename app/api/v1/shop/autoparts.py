@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 
 from dependencies.autoparts import (
     BrandServiceDep,
@@ -8,34 +8,21 @@ from dependencies.autoparts import (
     PartFitmentServiceDep,
 )
 from schemas.autoparts import (
-    BrandCreateRequest,
     BrandResponse,
-    PartCreateRequest,
     PartResponse,
-    PartNumbersCreateRequest,
     PartNumbersResponse,
-    CrossReferenceCreateRequest,
     CrossReferenceResponse,
-    PartFitmentCreateRequest,
     PartFitmentResponse,
 )
 
 
 router = APIRouter(
     prefix="/autoparts",
-    tags=["autoparts"],
+    tags=["shop-autoparts"],
 )
 
 
-# Brand endpoints
-@router.post("/brands", status_code=status.HTTP_201_CREATED)
-async def create_brand(
-    brand_info: BrandCreateRequest,
-    brand_service: BrandServiceDep,
-) -> BrandResponse:
-    return await brand_service.create_brand(brand_info)
-
-
+# Brand endpoints (read-only)
 @router.get("/brands/{brand_id}")
 async def get_brand(
     brand_id: int,
@@ -51,15 +38,7 @@ async def get_all_brands(
     return await brand_service.get_all_brands()
 
 
-# Part endpoints
-@router.post("/parts", status_code=status.HTTP_201_CREATED)
-async def create_part(
-    part_info: PartCreateRequest,
-    part_service: PartServiceDep,
-) -> PartResponse:
-    return await part_service.create_part(part_info)
-
-
+# Part endpoints (read-only)
 @router.get("/parts/{part_id}")
 async def get_part(
     part_id: int,
@@ -83,15 +62,7 @@ async def get_all_parts(
     return await part_service.get_all_parts()
 
 
-# PartNumbers endpoints
-@router.post("/part-numbers", status_code=status.HTTP_201_CREATED)
-async def create_part_number(
-    part_number_info: PartNumbersCreateRequest,
-    part_numbers_service: PartNumbersServiceDep,
-) -> PartNumbersResponse:
-    return await part_numbers_service.create_part_number(part_number_info)
-
-
+# PartNumbers endpoints (read-only)
 @router.get("/part-numbers/{part_number_id}")
 async def get_part_number(
     part_number_id: int,
@@ -108,15 +79,7 @@ async def get_part_numbers_by_part_id(
     return await part_numbers_service.get_part_numbers_by_part_id(part_id)
 
 
-# CrossReference endpoints
-@router.post("/cross-references", status_code=status.HTTP_201_CREATED)
-async def create_cross_reference(
-    cross_ref_info: CrossReferenceCreateRequest,
-    cross_reference_service: CrossReferenceServiceDep,
-) -> CrossReferenceResponse:
-    return await cross_reference_service.create_cross_reference(cross_ref_info)
-
-
+# CrossReference endpoints (read-only)
 @router.get("/part-numbers/{part_number_id}/cross-references")
 async def get_cross_references_by_part_number_id(
     part_number_id: int,
@@ -125,15 +88,7 @@ async def get_cross_references_by_part_number_id(
     return await cross_reference_service.get_cross_references_by_part_number_id(part_number_id)
 
 
-# PartFitment endpoints
-@router.post("/part-fitments", status_code=status.HTTP_201_CREATED)
-async def create_part_fitment(
-    fitment_info: PartFitmentCreateRequest,
-    part_fitment_service: PartFitmentServiceDep,
-) -> PartFitmentResponse:
-    return await part_fitment_service.create_part_fitment(fitment_info)
-
-
+# PartFitment endpoints (read-only)
 @router.get("/parts/{part_id}/fitments")
 async def get_fitments_by_part_id(
     part_id: int,

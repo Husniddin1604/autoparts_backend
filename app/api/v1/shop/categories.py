@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 
 from dependencies.categories import (
     CategoryServiceDep,
@@ -7,32 +7,20 @@ from dependencies.categories import (
     PartCategoryLinksServiceDep,
 )
 from schemas.categories import (
-    CategoryCreateRequest,
     CategoryResponse,
-    AttributeCreateRequest,
     AttributeResponse,
-    CategoryAttributeCreateRequest,
     CategoryAttributeResponse,
-    PartCategoryLinksCreateRequest,
     PartCategoryLinksResponse,
 )
 
 
 router = APIRouter(
     prefix="/categories",
-    tags=["categories"],
+    tags=["shop-categories"],
 )
 
 
-# Category endpoints
-@router.post("/", status_code=status.HTTP_201_CREATED)
-async def create_category(
-    category_info: CategoryCreateRequest,
-    category_service: CategoryServiceDep,
-) -> CategoryResponse:
-    return await category_service.create_category(category_info)
-
-
+# Category endpoints (read-only)
 @router.get("/{category_id}")
 async def get_category(
     category_id: int,
@@ -64,15 +52,7 @@ async def get_all_categories(
     return await category_service.get_all_categories()
 
 
-# Attribute endpoints
-@router.post("/attributes", status_code=status.HTTP_201_CREATED)
-async def create_attribute(
-    attribute_info: AttributeCreateRequest,
-    attribute_service: AttributeServiceDep,
-) -> AttributeResponse:
-    return await attribute_service.create_attribute(attribute_info)
-
-
+# Attribute endpoints (read-only)
 @router.get("/attributes/{attribute_id}")
 async def get_attribute(
     attribute_id: int,
@@ -88,15 +68,7 @@ async def get_all_attributes(
     return await attribute_service.get_all_attributes()
 
 
-# CategoryAttribute endpoints
-@router.post("/category-attributes", status_code=status.HTTP_201_CREATED)
-async def create_category_attribute(
-    category_attribute_info: CategoryAttributeCreateRequest,
-    category_attribute_service: CategoryAttributeServiceDep,
-) -> CategoryAttributeResponse:
-    return await category_attribute_service.create_category_attribute(category_attribute_info)
-
-
+# CategoryAttribute endpoints (read-only)
 @router.get("/{category_id}/attributes")
 async def get_category_attributes_by_category_id(
     category_id: int,
@@ -105,15 +77,7 @@ async def get_category_attributes_by_category_id(
     return await category_attribute_service.get_category_attributes_by_category_id(category_id)
 
 
-# PartCategoryLinks endpoints
-@router.post("/part-category-links", status_code=status.HTTP_201_CREATED)
-async def create_part_category_link(
-    link_info: PartCategoryLinksCreateRequest,
-    part_category_links_service: PartCategoryLinksServiceDep,
-) -> PartCategoryLinksResponse:
-    return await part_category_links_service.create_part_category_link(link_info)
-
-
+# PartCategoryLinks endpoints (read-only)
 @router.get("/parts/{part_id}/categories")
 async def get_links_by_part_id(
     part_id: int,

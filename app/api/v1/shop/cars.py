@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter
 
 from dependencies.cars import (
     ManufacturerServiceDep,
@@ -6,30 +6,19 @@ from dependencies.cars import (
     CarModificationServiceDep,
 )
 from schemas.cars import (
-    ManufacturerCreateRequest,
     ManufacturerResponse,
-    CarModelCreateRequest,
     CarModelResponse,
-    CarModificationCreateRequest,
     CarModificationResponse,
 )
 
 
 router = APIRouter(
     prefix="/cars",
-    tags=["cars"],
+    tags=["shop-cars"],
 )
 
 
-# Manufacturer endpoints
-@router.post("/manufacturers", status_code=status.HTTP_201_CREATED)
-async def create_manufacturer(
-    manufacturer_info: ManufacturerCreateRequest,
-    manufacturer_service: ManufacturerServiceDep,
-) -> ManufacturerResponse:
-    return await manufacturer_service.create_manufacturer(manufacturer_info)
-
-
+# Manufacturer endpoints (read-only)
 @router.get("/manufacturers/{manufacturer_id}")
 async def get_manufacturer(
     manufacturer_id: int,
@@ -45,15 +34,7 @@ async def get_all_manufacturers(
     return await manufacturer_service.get_all_manufacturers()
 
 
-# CarModel endpoints
-@router.post("/models", status_code=status.HTTP_201_CREATED)
-async def create_car_model(
-    car_model_info: CarModelCreateRequest,
-    car_model_service: CarModelServiceDep,
-) -> CarModelResponse:
-    return await car_model_service.create_car_model(car_model_info)
-
-
+# CarModel endpoints (read-only)
 @router.get("/models/{car_model_id}")
 async def get_car_model(
     car_model_id: int,
@@ -70,15 +51,7 @@ async def get_car_models_by_manufacturer_id(
     return await car_model_service.get_car_models_by_manufacturer_id(manufacturer_id)
 
 
-# CarModification endpoints
-@router.post("/modifications", status_code=status.HTTP_201_CREATED)
-async def create_car_modification(
-    modification_info: CarModificationCreateRequest,
-    car_modification_service: CarModificationServiceDep,
-) -> CarModificationResponse:
-    return await car_modification_service.create_car_modification(modification_info)
-
-
+# CarModification endpoints (read-only)
 @router.get("/modifications/{modification_id}")
 async def get_car_modification(
     modification_id: int,
