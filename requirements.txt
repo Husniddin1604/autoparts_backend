@@ -18,3 +18,4 @@ APScheduler==3.11.0
 pytest==8.4.1
 pytest-asyncio==1.1.0
 telealert==1.1.0
+bcrypt==4.2.1
