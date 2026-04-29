@@ -17,7 +17,7 @@ class UserBaseSchema(BaseModel):
 
 class UserCreateRequest(UserBaseSchema):
     """Schema for creating a new user."""
-    pass
+    password: str
 
 
 class UserUpdateRequest(UserBaseSchema):
