@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES: int = (
         60  # Expiration time for access tokens in minutes
     )
+    REFRESH_TOKEN_EXPIRE_DAYS: int = 30  # Expiration time for refresh tokens in days
 
     # Postgresql configuration
     POSTGRES_PORT: int  # PostgreSQL port for the application
