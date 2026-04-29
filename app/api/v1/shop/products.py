@@ -19,14 +19,6 @@ router = APIRouter(
 
 
 # Product endpoints (read-only)
-@router.get("/{product_id}")
-async def get_product(
-    product_id: int,
-    product_service: ProductServiceDep,
-) -> ProductResponse:
-    return await product_service.get_product_by_id(product_id)
-
-
 @router.get("/barcode/{barcode}")
 async def get_product_by_barcode(
     barcode: str,
@@ -41,6 +33,14 @@ async def get_products_by_part_number_id(
     product_service: ProductServiceDep,
 ) -> list[ProductResponse]:
     return await product_service.get_products_by_part_number_id(part_number_id)
+
+
+@router.get("/{product_id}")
+async def get_product(
+    product_id: int,
+    product_service: ProductServiceDep,
+) -> ProductResponse:
+    return await product_service.get_product_by_id(product_id)
 
 
 # Stock endpoints (read-only)

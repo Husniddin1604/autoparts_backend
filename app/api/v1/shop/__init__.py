@@ -6,7 +6,6 @@ from .products import router as products_router
 
 router = APIRouter(
     prefix="/shop",
-    tags=["shop"],
 )
 
 all_routers = [

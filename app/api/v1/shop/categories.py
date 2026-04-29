@@ -21,12 +21,11 @@ router = APIRouter(
 
 
 # Category endpoints (read-only)
-@router.get("/{category_id}")
-async def get_category(
-    category_id: int,
+@router.get("/")
+async def get_all_categories(
     category_service: CategoryServiceDep,
-) -> CategoryResponse:
-    return await category_service.get_category_by_id(category_id)
+) -> list[CategoryResponse]:
+    return await category_service.get_all_categories()
 
 
 @router.get("/slug/{slug}")
@@ -45,11 +44,12 @@ async def get_categories_by_parent_id(
     return await category_service.get_categories_by_parent_id(parent_id)
 
 
-@router.get("/")
-async def get_all_categories(
+@router.get("/{category_id}")
+async def get_category(
+    category_id: int,
     category_service: CategoryServiceDep,
-) -> list[CategoryResponse]:
-    return await category_service.get_all_categories()
+) -> CategoryResponse:
+    return await category_service.get_category_by_id(category_id)
 
 
 # Attribute endpoints (read-only)
