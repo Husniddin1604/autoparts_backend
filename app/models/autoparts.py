@@ -127,4 +127,4 @@ class PartFitment(Base):
     )
 
     def __repr__(self):
-        return self.id
+        return  f"<PartFitment(id={self.id})>"
