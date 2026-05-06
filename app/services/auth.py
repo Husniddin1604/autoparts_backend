@@ -86,7 +86,7 @@ class AuthService(AuthServiceABC):
 
     async def logout(self, token: str, verify_exp=False) -> dict:
         try:
-            payload = decode_token(token)
+            payload = decode_token(token, verify_exp)
 
             jti = payload.get("jti")
             exp = payload.get("exp")

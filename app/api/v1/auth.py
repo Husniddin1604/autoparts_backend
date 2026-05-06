@@ -1,7 +1,7 @@
 from dependencies.users import RequestUserDep
 from dependencies.auth import AuthServiceDep
 from schemas.auth import LoginWithEmailRequest, LoginWithUsernameRequest
-from fastapi import APIRouter, Depends, HTTPException, Query, Request, status
+from fastapi import APIRouter, Depends
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
 

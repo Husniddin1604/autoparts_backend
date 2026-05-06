@@ -13,12 +13,9 @@ def setup_middleware(app: FastAPI) -> None:
     app.add_middleware(
         TrustedHostMiddleware,
         allowed_hosts=[
-            "xizmatdev.imv.uz",
-            "xizmat.uzasbo.uz",
+            # "xizmatdev.imv.uz",
             "localhost",
             "127.0.0.1",
-            "xizmat_foreign",
-            "",
         ],
     )
 
