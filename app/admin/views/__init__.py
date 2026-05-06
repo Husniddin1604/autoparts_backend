@@ -22,3 +22,4 @@ from admin.views.products import (
     StockAdminView
 )
 from admin.views.users import UserAdminView
+from admin.views.orders import OrderAdminView, OrderItemAdminView

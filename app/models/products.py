@@ -17,6 +17,7 @@ class Product(Base):
     part_number = relationship("PartNumbers", back_populates="products")
     product_attribute_values = relationship("ProductAttributeValues", back_populates="product")
     stocks = relationship("Stock", back_populates="product")
+    order_items = relationship("OrderItem", back_populates="product")
 
     def __repr__(self):
         return self.name

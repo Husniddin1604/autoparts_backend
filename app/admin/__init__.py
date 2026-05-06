@@ -15,6 +15,7 @@ from models.categories import (
     PartCategoryLinks
 )
 from models.users import User
+from models.orders import Order, OrderItem
 from models.products import Product, ProductAttributeValues, Stock
 from starlette_admin.contrib.sqla import Admin
 
@@ -65,6 +66,10 @@ def setup_admin(app: FastAPI):
     admin.add_view(ProductAdminView(Product))
     admin.add_view(ProductAttributeValuesAdminView(ProductAttributeValues))
     admin.add_view(StockAdminView(Stock))
+
+    # Add Orders views
+    admin.add_view(OrderAdminView(Order))
+    admin.add_view(OrderItemAdminView(OrderItem))
 
     # Add Users views
     admin.add_view(UserAdminView(User))

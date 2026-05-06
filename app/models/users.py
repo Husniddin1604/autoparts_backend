@@ -4,7 +4,7 @@ import bcrypt
 from models.base import Base
 from sqlalchemy import Boolean, String, event
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 
 class User(Base):
@@ -26,6 +26,8 @@ class User(Base):
     phone: Mapped[str | None] = mapped_column(String, nullable=False)
     is_staff: Mapped[bool] = mapped_column(Boolean, default=False)
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
+
+    orders = relationship("Order", back_populates="customer")
 
     @property
     def password(self) -> str:
