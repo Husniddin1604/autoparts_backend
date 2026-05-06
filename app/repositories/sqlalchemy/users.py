@@ -3,11 +3,7 @@ from sqlalchemy import select
 
 from models.users import User
 from repositories.ports.users import UserRepository
-
-
-def _filter_deleted(query, model):
-    """Helper to filter out soft-deleted records."""
-    return query.where(model.deleted_at.is_(None))
+from repositories.sqlalchemy import _filter_deleted
 
 
 class SqlAlchemyUserRepository(UserRepository):

@@ -7,11 +7,7 @@ from repositories.ports.products import (
     StockRepository,
     ProductAttributeValuesRepository,
 )
-
-
-def _filter_deleted(query, model):
-    """Helper to filter out soft-deleted records."""
-    return query.where(model.deleted_at.is_(None))
+from repositories.sqlalchemy import _filter_deleted
 
 
 class SqlAlchemyProductRepository(ProductRepository):
@@ -27,6 +23,12 @@ class SqlAlchemyProductRepository(ProductRepository):
         await self.session.flush()
         await self.session.refresh(product)
         return product
+
+    async def add_many(self, products: list[Product]) -> list[Product]:
+        self.session.add_all(products)
+        await self.session.flush()
+        await self.session.refresh(products)
+        return products
 
     async def get_by_id(self, product_id: int) -> Product | None:
         result = await self.session.execute(
@@ -64,6 +66,12 @@ class SqlAlchemyStockRepository(StockRepository):
         await self.session.flush()
         await self.session.refresh(stock)
         return stock
+
+    async def add_many(self, stocks: list[Stock]) -> list[Stock]:
+        self.session.add_all(stocks)
+        await self.session.flush()
+        await self.session.refresh(stocks)
+        return stocks
 
     async def get_by_id(self, stock_id: int) -> Stock | None:
         result = await self.session.execute(
@@ -105,6 +113,12 @@ class SqlAlchemyProductAttributeValuesRepository(ProductAttributeValuesRepositor
         await self.session.flush()
         await self.session.refresh(product_attribute_value)
         return product_attribute_value
+
+    async def add_many(self, product_attribute_values: list[ProductAttributeValues]) -> list[ProductAttributeValues]:
+        self.session.add_all(product_attribute_values)
+        await self.session.flush()
+        await self.session.refresh(product_attribute_values)
+        return product_attribute_values
 
     async def get_by_id(self, product_attribute_value_id: int) -> ProductAttributeValues | None:
         result = await self.session.execute(

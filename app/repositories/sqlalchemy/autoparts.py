@@ -9,11 +9,7 @@ from repositories.ports.autoparts import (
     CrossReferenceRepository,
     PartFitmentRepository,
 )
-
-
-def _filter_deleted(query, model):
-    """Helper to filter out soft-deleted records."""
-    return query.where(model.deleted_at.is_(None))
+from repositories.sqlalchemy import _filter_deleted
 
 
 class SqlAlchemyBrandRepository(BrandRepository):
@@ -29,6 +25,12 @@ class SqlAlchemyBrandRepository(BrandRepository):
         await self.session.flush()
         await self.session.refresh(brand)
         return brand
+
+    async def add_many(self, brands: list[Brand]) -> list[Brand]:
+        self.session.add_all(brands)
+        await self.session.flush()
+        await self.session.refresh(brands)
+        return brands
 
     async def get_by_id(self, brand_id: int) -> Brand | None:
         result = await self.session.execute(
@@ -61,6 +63,12 @@ class SqlAlchemyPartRepository(PartRepository):
         await self.session.refresh(part)
         return part
 
+    async def add_many(self, parts: list[Part]) -> list[Part]:
+        self.session.add_all(parts)
+        await self.session.flush()
+        await self.session.refresh(parts)
+        return parts
+
     async def get_by_id(self, part_id: int) -> Part | None:
         result = await self.session.execute(
             _filter_deleted(select(Part).where(Part.id == part_id), Part)
@@ -91,6 +99,12 @@ class SqlAlchemyPartNumbersRepository(PartNumbersRepository):
         await self.session.flush()
         await self.session.refresh(part_number)
         return part_number
+
+    async def add_many(self, part_numbers: list[PartNumbers]) -> list[PartNumbers]:
+        self.session.add_all(part_numbers)
+        await self.session.flush()
+        await self.session.refresh(part_numbers)
+        return part_numbers
 
     async def get_by_id(self, part_number_id: int) -> PartNumbers | None:
         result = await self.session.execute(
@@ -131,6 +145,12 @@ class SqlAlchemyCrossReferenceRepository(CrossReferenceRepository):
         await self.session.refresh(cross_ref)
         return cross_ref
 
+    async def add_many(self, cross_refs: list[CrossReference]) -> list[CrossReference]:
+        self.session.add_all(cross_refs)
+        await self.session.flush()
+        await self.session.refresh(cross_refs)
+        return cross_refs
+
     async def get_by_id(self, cross_ref_id: int) -> CrossReference | None:
         result = await self.session.execute(
             _filter_deleted(select(CrossReference).where(CrossReference.id == cross_ref_id), CrossReference)
@@ -168,6 +188,12 @@ class SqlAlchemyPartFitmentRepository(PartFitmentRepository):
         await self.session.flush()
         await self.session.refresh(part_fitment)
         return part_fitment
+
+    async def add_many(self, part_fitments: list[PartFitment]) -> list[PartFitment]:
+        self.session.add_all(part_fitments)
+        await self.session.flush()
+        await self.session.refresh(part_fitments)
+        return part_fitments
 
     async def get_by_id(self, fitment_id: int) -> PartFitment | None:
         result = await self.session.execute(

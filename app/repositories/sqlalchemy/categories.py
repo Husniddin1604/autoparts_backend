@@ -8,11 +8,7 @@ from repositories.ports.categories import (
     CategoryAttributeRepository,
     PartCategoryLinksRepository,
 )
-
-
-def _filter_deleted(query, model):
-    """Helper to filter out soft-deleted records."""
-    return query.where(model.deleted_at.is_(None))
+from repositories.sqlalchemy import _filter_deleted
 
 
 class SqlAlchemyCategoryRepository(CategoryRepository):
@@ -28,6 +24,12 @@ class SqlAlchemyCategoryRepository(CategoryRepository):
         await self.session.flush()
         await self.session.refresh(category)
         return category
+
+    async def add_many(self, categories: list[Category]) -> list[Category]:
+        self.session.add_all(categories)
+        await self.session.flush()
+        await self.session.refresh(categories)
+        return categories
 
     async def get_by_id(self, category_id: int) -> Category | None:
         result = await self.session.execute(
@@ -77,6 +79,12 @@ class SqlAlchemyAttributeRepository(AttributeRepository):
         await self.session.refresh(attribute)
         return attribute
 
+    async def add_many(self, attributes: list[Attribute]) -> list[Attribute]:
+        self.session.add_all(attributes)
+        await self.session.flush()
+        await self.session.refresh(attributes)
+        return attributes
+
     async def get_by_id(self, attribute_id: int) -> Attribute | None:
         result = await self.session.execute(
             _filter_deleted(select(Attribute).where(Attribute.id == attribute_id), Attribute)
@@ -101,6 +109,12 @@ class SqlAlchemyCategoryAttributeRepository(CategoryAttributeRepository):
         await self.session.flush()
         await self.session.refresh(category_attribute)
         return category_attribute
+
+    async def add_many(self, category_attributes: list[CategoryAttribute]) -> list[CategoryAttribute]:
+        self.session.add_all(category_attributes)
+        await self.session.flush()
+        await self.session.refresh(category_attributes)
+        return category_attributes
 
     async def get_by_id(self, category_attribute_id: int) -> CategoryAttribute | None:
         result = await self.session.execute(
@@ -134,6 +148,12 @@ class SqlAlchemyPartCategoryLinksRepository(PartCategoryLinksRepository):
         await self.session.flush()
         await self.session.refresh(part_category_link)
         return part_category_link
+
+    async def add_many(self, part_category_links: list[PartCategoryLinks]) -> list[PartCategoryLinks]:
+        self.session.add_all(part_category_links)
+        await self.session.flush()
+        await self.session.refresh(part_category_links)
+        return part_category_links
 
     async def get_by_id(self, part_category_link_id: int) -> PartCategoryLinks | None:
         result = await self.session.execute(

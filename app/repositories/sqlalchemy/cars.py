@@ -7,11 +7,7 @@ from repositories.ports.cars import (
     CarModelRepository,
     CarModificationRepository,
 )
-
-
-def _filter_deleted(query, model):
-    """Helper to filter out soft-deleted records."""
-    return query.where(model.deleted_at.is_(None))
+from repositories.sqlalchemy import _filter_deleted
 
 
 class SqlAlchemyManufacturerRepository(ManufacturerRepository):
@@ -27,6 +23,12 @@ class SqlAlchemyManufacturerRepository(ManufacturerRepository):
         await self.session.flush()
         await self.session.refresh(manufacturer)
         return manufacturer
+
+    async def add_many(self, manufacturers: list[Manufacturer]) -> list[Manufacturer]:
+        self.session.add_all(manufacturers)
+        await self.session.flush()
+        await self.session.refresh(manufacturers)
+        return manufacturers
 
     async def get_by_id(self, manufacturer_id: int) -> Manufacturer | None:
         result = await self.session.execute(
@@ -59,6 +61,12 @@ class SqlAlchemyCarModelRepository(CarModelRepository):
         await self.session.refresh(car_model)
         return car_model
 
+    async def add_many(self, car_models: list[CarModel]) -> list[CarModel]:
+        self.session.add_all(car_models)
+        await self.session.flush()
+        await self.session.refresh(car_models)
+        return car_models
+
     async def get_by_id(self, car_model_id: int) -> CarModel | None:
         result = await self.session.execute(
             _filter_deleted(select(CarModel).where(CarModel.id == car_model_id), CarModel)
@@ -89,6 +97,12 @@ class SqlAlchemyCarModificationRepository(CarModificationRepository):
         await self.session.flush()
         await self.session.refresh(car_modification)
         return car_modification
+
+    async def add_many(self, car_modifications: list[CarModification]) -> list[CarModification]:
+        self.session.add_all(car_modifications)
+        await self.session.flush()
+        await self.session.refresh(car_modifications)
+        return car_modifications
 
     async def get_by_id(self, car_modification_id: int) -> CarModification | None:
         result = await self.session.execute(
