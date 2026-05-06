@@ -1,5 +1,6 @@
 from pydantic import BaseModel, ConfigDict
 from datetime import datetime
+from uuid import UUID
 
 
 class UserBaseSchema(BaseModel):
@@ -24,14 +25,14 @@ class UserUpdateRequest(UserBaseSchema):
     """Schema for updating user information."""
     is_staff: bool
     is_active: bool
-    id: int
+    user_uuid: UUID
 
 
 class UserUpdateResponse(UserBaseSchema):
     """Schema for updating user information."""
     is_staff: bool
     is_active: bool
-    id: int
+    user_uuid: UUID
 
 
 class UserInfoResponse(UserBaseSchema):
@@ -39,7 +40,7 @@ class UserInfoResponse(UserBaseSchema):
     is_staff: bool
     is_active: bool
     created_at: datetime
-    id: int
+    user_uuid: UUID
 
 
 class RegisterResponse(BaseModel):
